@@ -91,7 +91,7 @@ scripts
 * Example 9:
 
 ```shell
->git clone "git@scm-01.karlstorz.com:sis/documentation/gpdp/system-engineering.git"
+>git clone "https://github.com/mcpride/git-helpers-examples.git"
 ```
 
 #### Restore git submodules with partial-checkout support
