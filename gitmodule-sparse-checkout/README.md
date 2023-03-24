@@ -81,7 +81,7 @@ scripts
 * Powershell script example 8 (for all submodules in a git repository):
 
 ```shell
->powershell -ExecutionPolicy Bypass -NoLogo -Command "./gitmodule-sparse-checkout.ps1"
+>powershell -ExecutionPolicy Bypass -NoLogo -Command "./gitmodule-sparse-checkout.ps1 backup"
 ```
 
 ### Restore (partial) submodules after local clone
@@ -102,21 +102,12 @@ scripts
 >powershell -ExecutionPolicy Bypass -NoLogo -Command "./gitmodule-sparse-checkout.ps1"
 ```
 
-### Other git commands
-
-#### Update a submodule
-
-* Update a submodule remotly with rebase example 11:
-
-```shell
->git submodule update --force --no-fetch --rebase --remote -- "external/app1-service1"
-```
-
 ## Restrictions
 
 * Don't use spaces ` ` and dots `.` in your submodule names! Instead use the `--name <valid-submodule-name>` parameter when adding submodules, and choose a valid name which can also act as a directory name without spaces ` ` and dots `.` (see Example 2).
 * Don't use single quotes `'` inside directory filters, e.g. `users/Charly's Tante/documents`! There is currently no fix!
 * Use slashes `/` instead of backslashes `\` for platform compatibility!
+* Poor error handling :-(
 
 ### Credits
 
