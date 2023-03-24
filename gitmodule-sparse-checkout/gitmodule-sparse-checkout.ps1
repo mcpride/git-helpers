@@ -52,37 +52,13 @@ The source code of this repository is under MIT license. See the LICENSE file fo
 #>
 
 
+
 [CmdletBinding()]
 param( [ValidateSet('restore', 'backup')] [string]$Command = "restore" )
 
-$gitRootDir = git rev-parse --show-toplevel
-$origCurrentDir = Get-Location
-try {
-    Set-Location $gitRootDir
-
-    $gitConfigDir = git rev-parse --git-dir
-    $gitConfigModulesDir = (Join-Path -Path $gitConfigDir -ChildPath "modules").Replace("\", "/")
-
-    # Get all submodule names from .gitmodules file:
-    $submodules = Select-String -Path .gitmodules '^\[submodule \"(.*)\"]$' -AllMatches | Foreach-Object {
-            $_.Matches
-        } | Foreach-Object {
-            $_.Groups[1].Value
-        }
-
-    # for each found submodule do:
-    $submodules | ForEach-Object {
-        if ($Command -eq "backup") {
-            Backup-GitModule -ModuleName $_ -GitConfigModulesDir $gitConfigModulesDir
-        } elseif ($Command -eq "restore") {
-            Restore-GitModule -ModuleName $_ -GitConfigModulesDir $gitConfigModulesDir
-        }
-    }
-} finally {
-    Set-Location $origCurrentDir
-}
 
 #-----------------------------------------------------------------------------
+
 
 function Restore-GitModule {
     param (
@@ -207,4 +183,35 @@ function Backup-GitModule {
             }
         }
     }
+}
+
+
+#-----------------------------------------------------------------------------
+
+
+$gitRootDir = git rev-parse --show-toplevel
+$origCurrentDir = Get-Location
+try {
+    Set-Location $gitRootDir
+
+    $gitConfigDir = git rev-parse --git-dir
+    $gitConfigModulesDir = (Join-Path -Path $gitConfigDir -ChildPath "modules").Replace("\", "/")
+
+    # Get all submodule names from .gitmodules file:
+    $submodules = Select-String -Path .gitmodules '^\[submodule \"(.*)\"]$' -AllMatches | Foreach-Object {
+            $_.Matches
+        } | Foreach-Object {
+            $_.Groups[1].Value
+        }
+
+    # for each found submodule do:
+    $submodules | ForEach-Object {
+        if ($Command -eq "backup") {
+            Backup-GitModule -ModuleName $_ -GitConfigModulesDir $gitConfigModulesDir
+        } elseif ($Command -eq "restore") {
+            Restore-GitModule -ModuleName $_ -GitConfigModulesDir $gitConfigModulesDir
+        }
+    }
+} finally {
+    Set-Location $origCurrentDir
 }
